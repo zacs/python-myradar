@@ -1,7 +1,7 @@
 import requests
 import threading
 
-from forecastio.models import Forecast
+from myradar.models import Forecast
 
 
 def load_forecast(key, lat, lng, time=None, units="auto", lang="en", lazy=False,
@@ -24,11 +24,11 @@ def load_forecast(key, lat, lng, time=None, units="auto", lang="en", lazy=False,
     """
 
     if time is None:
-        url = 'https://api.darksky.net/forecast/%s/%s,%s' \
+        url = 'https://api.myradar.dev/forecast/%s/%s,%s' \
               '?units=%s&lang=%s' % (key, lat, lng, units, lang)
     else:
         url_time = time.replace(microsecond=0).isoformat()  # API returns 400 for microseconds
-        url = 'https://api.darksky.net/forecast/%s/%s,%s,%s' \
+        url = 'https://api.myradar.dev/forecast/%s/%s,%s,%s' \
               '?units=%s&lang=%s' % (key, lat, lng, url_time, units, lang)
 
     if lazy is True:
@@ -56,13 +56,13 @@ def manual(requestURL, callback=None):
 
 
 def get_forecast(requestURL):
-    forecastio_reponse = requests.get(requestURL)
-    forecastio_reponse.raise_for_status()
+    myradar_reponse = requests.get(requestURL)
+    myradar_reponse.raise_for_status()
 
-    json = forecastio_reponse.json()
-    headers = forecastio_reponse.headers
+    json = myradar_reponse.json()
+    headers = myradar_reponse.headers
 
-    return Forecast(json, forecastio_reponse, headers)
+    return Forecast(json, myradar_reponse, headers)
 
 
 def load_async(url, callback):

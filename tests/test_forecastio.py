@@ -3,7 +3,7 @@ import unittest
 import responses
 import requests
 
-import forecastio
+import myradar
 
 from nose.tools import raises
 from datetime import datetime
@@ -12,7 +12,7 @@ from datetime import datetime
 class EndToEnd(unittest.TestCase):
 
     def setUp(self):
-        self.api_key = os.environ.get("FORECASTIO_API_KEY")
+        self.api_key = os.environ.get("myradar_API_KEY")
 
         self.lat = 52.370235
         self.lng = 4.903549
@@ -21,14 +21,14 @@ class EndToEnd(unittest.TestCase):
 
     def test_with_time(self):
 
-        forecast = forecastio.load_forecast(
+        forecast = myradar.load_forecast(
             self.api_key, self.lat,
             self.lng, time=self.time
         )
         self.assertEqual(forecast.response.status_code, 200)
 
     def test_with_language(self):
-        forecast = forecastio.load_forecast(
+        forecast = myradar.load_forecast(
             self.api_key, self.lat, self.lng, time=self.time, lang="de"
         )
         # Unfortunately the API doesn't return anything which
@@ -38,7 +38,7 @@ class EndToEnd(unittest.TestCase):
 
     def test_without_time(self):
 
-        forecast = forecastio.load_forecast(
+        forecast = myradar.load_forecast(
             self.api_key, self.lat, self.lng
         )
         self.assertEqual(forecast.response.status_code, 200)
@@ -47,7 +47,7 @@ class EndToEnd(unittest.TestCase):
         self.api_key = 'not a real key'
 
         try:
-            forecastio.load_forecast(
+            myradar.load_forecast(
                 self.api_key, self.lat, self.lng
             )
 
@@ -59,7 +59,7 @@ class EndToEnd(unittest.TestCase):
         self.lat = ''
 
         try:
-            forecastio.load_forecast(
+            myradar.load_forecast(
                 self.api_key, self.lat, self.lng
             )
 
@@ -72,7 +72,7 @@ class BasicFunctionality(unittest.TestCase):
 
     @responses.activate
     def setUp(self):
-        URL = "https://api.darksky.net/forecast/foo/50.0,10.0?units=auto&lang=en"
+        URL = "https://api.myradar.dev/forecast/foo/50.0,10.0?units=auto&lang=en"
         responses.add(responses.GET, URL,
                       body=open('tests/fixtures/test.json').read(),
                       status=200,
@@ -82,7 +82,7 @@ class BasicFunctionality(unittest.TestCase):
         api_key = "foo"
         lat = 50.0
         lng = 10.0
-        self.fc = forecastio.load_forecast(api_key, lat, lng)
+        self.fc = myradar.load_forecast(api_key, lat, lng)
 
         self.assertEqual(responses.calls[0].request.url, URL)
 
@@ -121,7 +121,7 @@ class BasicFunctionality(unittest.TestCase):
 
         self.assertEqual(
             "{}".format(currently),
-            "<ForecastioDataPoint instance: Overcast at 2014-05-28 08:27:39>"
+            "<myradarDataPoint instance: Overcast at 2014-05-28 08:27:39>"
         )
 
     def test_datablock_string_repr(self):
@@ -130,11 +130,11 @@ class BasicFunctionality(unittest.TestCase):
 
         self.assertEqual(
             "{}".format(hourly),
-            "<ForecastioDataBlock instance: Drizzle until this evening. "
-            "with 49 ForecastioDataPoints>"
+            "<myradarDataBlock instance: Drizzle until this evening. "
+            "with 49 myradarDataPoints>"
         )
 
-    @raises(forecastio.utils.PropertyUnavailable)
+    @raises(myradar.utils.PropertyUnavailable)
     def test_datapoint_attribute_not_available(self):
         daily = self.fc.daily()
         daily.data[0].notavailable
@@ -154,7 +154,7 @@ class ForecastsWithAlerts(unittest.TestCase):
 
     @responses.activate
     def setUp(self):
-        URL = "https://api.darksky.net/forecast/foo/50.0,10.0?units=auto&lang=en"
+        URL = "https://api.myradar.dev/forecast/forecast/foo/50.0,10.0?units=auto&lang=en"
         responses.add(responses.GET, URL,
                       body=open('tests/fixtures/test_with_alerts.json').read(),
                       status=200,
@@ -164,7 +164,7 @@ class ForecastsWithAlerts(unittest.TestCase):
         api_key = "foo"
         lat = 50.0
         lng = 10.0
-        self.fc = forecastio.load_forecast(api_key, lat, lng)
+        self.fc = myradar.load_forecast(api_key, lat, lng)
 
     def test_alerts_length(self):
         alerts = self.fc.alerts()
@@ -199,7 +199,7 @@ class ForecastsWithAlerts(unittest.TestCase):
             1402133400
         )
 
-    @raises(forecastio.utils.PropertyUnavailable)
+    @raises(myradar.utils.PropertyUnavailable)
     def test_alert_property_does_not_exist(self):
         alerts = self.fc.alerts()
         first_alert = alerts[0]
@@ -236,7 +236,7 @@ class BasicManualURL(unittest.TestCase):
                       content_type='application/json',
                       match_querystring=True)
 
-        self.forecast = forecastio.manual("http://test_url.com/")
+        self.forecast = myradar.manual("http://test_url.com/")
 
     def test_current_temp(self):
 

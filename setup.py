@@ -15,16 +15,16 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    name="python-forecastio",
+    name="python-myradar",
     version="1.4.0",
-    author="Ze'ev Gilovitz",
-    author_email="zeev.gil@gmail.com",
-    description=("A thin Python Wrapper for the Dark Sky (formerly Forecast.io) weather API"),
+    author="Zac Schellhardt",
+    author_email="zac.schellhardt@gmail.com",
+    description=("A thin Python Wrapper for the MyRadar (Dark Sky replacement) weather API"),
     license="BSD 2-clause",
-    keywords="weather API wrapper forecast.io location darksky",
-    url="http://zeevgilovitz.com/python-forecast.io/",
-    packages=['forecastio'],
-    package_data={'forecastio': ['LICENSE.txt', 'README.rst']},
+    keywords="weather API wrapper forecast.io location darksky myradar",
+    url="http://github.com/zacs/python-myradar/",
+    packages=['myradar'],
+    package_data={'myradar': ['LICENSE.txt', 'README.rst']},
     long_description=open('README.rst').read(),
     install_requires=['requests>=1.6', 'responses'],
 )

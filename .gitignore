@@ -4,4 +4,4 @@ dist
 test.py
 MANIFEST
 build/
-python_forecastio.egg-info/
+python_myradar.egg-info/

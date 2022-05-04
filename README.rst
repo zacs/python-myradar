@@ -2,7 +2,7 @@
 Dark Sky Wrapper
 *******************
 
-.. image:: https://travis-ci.org/ZeevG/python-forecast.io.svg?branch=master
+.. image:: https://travis-ci.org/zacs/python-myradar.svg?branch=master
 
 This is a wrapper for the Dark Sky (formerly forecast.io) API. It allows you to get the weather for any location, now, in the past, or future.
 
@@ -11,35 +11,35 @@ The Basic Use section covers enough to get you going. I suggest also reading the
 
 Installation
 ############
-You should use pip to install python-forecastio.
+You should use pip to install python-myradar.
 
-* To install pip install python-forecastio
-* To remove pip uninstall python-forecastio
+* To install pip install python-myradar
+* To remove pip uninstall python-myradar
 
 Simple!
 
 Requirements
 ############
 
-- You need an API key to use it (https://darksky.net/dev/). Don't worry a key is free.
+- You need an API key to use it (https://myradar.dev/). Don't worry a key is free.
 
 
 Basic Use
 #########
 
-Although you don't need to know anything about the Dark Sky API to use this module, their docs are available at https://darksky.net/dev/.
+Although you don't need to know anything about the MyRadar or Dark Sky APIs to use this module, their docs are available at https://darksky.net/dev/.
 
 To use the wrapper:
 
 .. code-block:: python
 
-	import forecastio
+	import myradar
 
 	api_key = "YOUR API KEY"
 	lat = -31.967819
 	lng = 115.87718
 
-	forecast = forecastio.load_forecast(api_key, lat, lng)
+	forecast = myradar.load_forecast(api_key, lat, lng)
 	...
 
 The ``load_forecast()`` method has a few optional parameters. Providing your API key, a latitude and longitude are the only required parameters.
@@ -67,17 +67,17 @@ The .data attributes for each DataBlock is a list of DataPoint objects. This is 
 Advanced
 ########
 
-*function* forecastio.load_forecast(key, latitude, longitude)
+*function* myradar.load_forecast(key, latitude, longitude)
 ---------------------------------------------------
 
 This makes an API request and returns a **Forecast** object (see below).
 
 Parameters:
-	- **key** - Your API key from https://darksky.net/dev/.
+	- **key** - Your API key from https://myradar.dev/.
 	- **latitude** - The latitude of the location for the forecast
 	- **longitude** - The longitude of the location for the forecast
 	- **time** - (optional) A datetime object for the forecast either in the past or future - see How Timezones Work below for the details on how timezones are handled in this library.
-	- **lang** - (optional) A string of the desired language. See https://darksky.net/dev/docs/time-machine for supported languages.
+	- **lang** - (optional) A string of the desired language. See https://myradar.dev/api-details#api=forecast-api for supported languages.
 	- **units** - (optional) A string of the preferred units of measurement, "auto" is the default. "us","ca","uk","si" are also available. See the API Docs (https://darksky.net/dev/docs/forecast) for exactly what each unit means.
 	- **lazy** - (optional) Defaults to `false`.  If `true` the function will request the json data as it is needed. Results in more requests, but maybe a faster response time.
 	- **callback** - (optional) Pass a function to be used as a callback. If used, load_forecast() will use an asynchronous HTTP call and **will not return the forecast object directly**, instead it will be passed to the callback function. Make sure it can accept it.
@@ -85,18 +85,18 @@ Parameters:
 ----------------------------------------------------
 
 
-*function* forecastio.manual(url)
+*function* myradar.manual(url)
 ----------------------------------------------------
 This function allows manual creation of the URL for the Dark Sky API request.  This method won't be required often but can be used to take advantage of new or beta features of the API which this wrapper does not support yet. Returns a **Forecast** object (see below).
 
 Parameters:
         - **url** - The URL which the wrapper will attempt build a forecast from.
-    	- **callback** - (optional) Pass a function to be used as a callback. If used, an asynchronous HTTP call will be used and ``forecastio.manual`` **will not return the forecast object directly**, instead it will be passed to the callback function. Make sure it can accept it.
+    	- **callback** - (optional) Pass a function to be used as a callback. If used, an asynchronous HTTP call will be used and ``myradar.manual`` **will not return the forecast object directly**, instead it will be passed to the callback function. Make sure it can accept it.
 
 ----------------------------------------------------
 
 
-*class* forecastio.models.Forecast
+*class* myradar.models.Forecast
 ------------------------------------
 
 The **Forecast** object, it contains both weather data and the HTTP response from Dark Sky
@@ -111,20 +111,20 @@ The **Forecast** object, it contains both weather data and the HTTP response fro
 
 **Methods**
 	- **currently()**
-		- Returns a ForecastioDataPoint object
+		- Returns a myradarDataPoint object
 	- **minutely()**
-		- Returns a ForecastioDataBlock object
+		- Returns a myradarDataBlock object
 	- **hourly()**
-		- Returns a ForecastioDataBlock object
+		- Returns a myradarDataBlock object
 	- **daily()**
-		- Returns a ForecastioDataBlock object
+		- Returns a myradarDataBlock object
 	- **update()**
 		- Refreshes the forecast data by making a new request.
 
 ----------------------------------------------------
 
 
-*class* forecastio.models.ForecastioDataBlock
+*class* myradar.models.myradarDataBlock
 ---------------------------------------------
 
 Contains data about a forecast over time.
@@ -135,12 +135,12 @@ Contains data about a forecast over time.
 	- **icon**
 		- A machine-readable text summary of this data block.
 	- **data**
-		- An array of **ForecastioDataPoint** objects (see below), ordered by time, which together describe the weather conditions at the requested location over time.
+		- An array of **myradarDataPoint** objects (see below), ordered by time, which together describe the weather conditions at the requested location over time.
 
 ----------------------------------------------------
 
 
-*class* forecastio.models.ForecastioDataPoint
+*class* myradar.models.myradarDataPoint
 ---------------------------------------------
 
 Contains data about a forecast at a particular time.
@@ -159,7 +159,7 @@ Data points have many attributes, but **not all of them are always available**. 
 	-	**precipProbability**
 		- A numerical value between 0 and 1 (inclusive) representing the probability of precipitation occurring at the given time.
 
-For a full list of ForecastioDataPoint attributes and attribute descriptions, take a look at the Dark Sky data point documentation (https://darksky.net/dev/docs/response#data-point)
+For a full list of myradarDataPoint attributes and attribute descriptions, take a look at the Dark Sky data point documentation (https://darksky.net/dev/docs/response#data-point)
 
 ----------------------------------------------------
 
@@ -178,7 +178,7 @@ Typically, would would want to do something like this:
   lat  = 52.370235
   lng  = 4.903549
   current_time = datetime(2015, 2, 27, 6, 0, 0)
-  forecast = forecastio.load_forecast(api_key, lat, lng, time=current_time)
+  forecast = myradar.load_forecast(api_key, lat, lng, time=current_time)
 
 
 Be caerful, things can get confusing when doing something like the below. Given that I'm looking up the weather in Amsterdam (+2) while I'm in Perth, Australia (+8).
@@ -191,7 +191,7 @@ Be caerful, things can get confusing when doing something like the below. Given 
 
   current_time = datetime.datetime.now()
 
-  forecast = forecastio.load_forecast(api_key, lat, lng, time=current_time)
+  forecast = myradar.load_forecast(api_key, lat, lng, time=current_time)
 
 
 The result is actually a request for the weather in the future in Amsterdam (by 6 hours). In addition, since all returned times are in UTC, it will report a time two hours behind the *local* time in Amsterdam.

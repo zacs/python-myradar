@@ -1,4 +1,4 @@
-from forecastio.utils import UnicodeMixin, PropertyUnavailable
+from myradar.utils import UnicodeMixin, PropertyUnavailable
 import datetime
 import requests
 
@@ -49,33 +49,33 @@ class Forecast(UnicodeMixin):
                 self.json[key] = response[key]
 
             if key == 'currently':
-                return ForecastioDataPoint(self.json[key])
+                return myradarDataPoint(self.json[key])
             else:
-                return ForecastioDataBlock(self.json[key])
+                return myradarDataBlock(self.json[key])
         except:
             if key == 'currently':
-                return ForecastioDataPoint()
+                return myradarDataPoint()
             else:
-                return ForecastioDataBlock()
+                return myradarDataBlock()
 
 
-class ForecastioDataBlock(UnicodeMixin):
+class myradarDataBlock(UnicodeMixin):
 
     def __init__(self, d=None):
         d = d or {}
         self.summary = d.get('summary')
         self.icon = d.get('icon')
 
-        self.data = [ForecastioDataPoint(datapoint)
+        self.data = [myradarDataPoint(datapoint)
                      for datapoint in d.get('data', [])]
 
     def __unicode__(self):
-        return '<ForecastioDataBlock instance: ' \
-               '%s with %d ForecastioDataPoints>' % (self.summary,
+        return '<myradarDataBlock instance: ' \
+               '%s with %d myradarDataPoints>' % (self.summary,
                                                      len(self.data),)
 
 
-class ForecastioDataPoint(UnicodeMixin):
+class myradarDataPoint(UnicodeMixin):
 
     def __init__(self, d={}):
         self.d = d
@@ -108,7 +108,7 @@ class ForecastioDataPoint(UnicodeMixin):
             )
 
     def __unicode__(self):
-        return '<ForecastioDataPoint instance: ' \
+        return '<myradarDataPoint instance: ' \
                '%s at %s>' % (self.summary, self.time,)
 
 
