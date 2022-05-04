@@ -154,7 +154,7 @@ class ForecastsWithAlerts(unittest.TestCase):
 
     @responses.activate
     def setUp(self):
-        URL = "https://api.myradar.dev/forecast/forecast/foo/50.0,10.0?units=auto&lang=en"
+        URL = "https://api.myradar.dev/forecast/foo/50.0,10.0?units=auto&lang=en"
         responses.add(responses.GET, URL,
                       body=open('tests/fixtures/test_with_alerts.json').read(),
                       status=200,
